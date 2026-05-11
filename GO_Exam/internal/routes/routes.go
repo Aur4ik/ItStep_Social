@@ -19,5 +19,6 @@ func SetupRoutes(r *gin.Engine) {
 	api.Use(middleware.AuthMiddleWare())
 	{
 		api.GET("/me", handler.Me)
+		api.POST("/avatar", handler.UploadAvatar)
 	}
 }

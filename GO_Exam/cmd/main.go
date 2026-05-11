@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-
+	
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("env not loaded")
@@ -23,5 +23,7 @@ func main() {
 
 	routes.SetupRoutes(r)
 
+	
+	r.Static("/uploads", "./uploads")
 	r.Run(":8080")
 }

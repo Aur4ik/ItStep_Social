@@ -1,7 +1,10 @@
 package handler
 
 import (
+
 	"net/http"
+
+
 
 	"project/itStep/internal/models"
 	"project/itStep/internal/service"
@@ -9,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-
 func Register(c *gin.Context) {
 
 	var user models.User
