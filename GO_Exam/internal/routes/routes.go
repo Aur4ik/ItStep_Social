@@ -20,5 +20,9 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		api.GET("/me", handler.Me)
 		api.POST("/avatar", handler.UploadAvatar)
+
+		api.POST("/posts", handler.CreatePost)
+		api.GET("posts", handler.GetPosts)
+		api.DELETE("posts/:id", handler.DeletePost)
 	}
 }
