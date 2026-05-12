@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"errors"
 	"net/http"
 	"os"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"project/itStep/internal/repository"
 )
 
 func getJWTKey() []byte {
@@ -19,6 +21,8 @@ func AuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		header := c.GetHeader("Authorization")
+
+		fmt.Println("AUTH MIDDLEWARE WORKS")
 
 		if header == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -73,7 +77,19 @@ func AuthMiddleWare() gin.HandlerFunc {
 			return
 		}
 
+		user, err := repository.GetUserByID(uint(userID))
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "user not found",
+			})
+			c.Abort()
+			return
+		}
+
+		fmt.Println("ROLE:", user.Role)
+
 		c.Set("user_id", int(userID))
+		c.Set("role", user.Role)
 
 		c.Next()
 	}

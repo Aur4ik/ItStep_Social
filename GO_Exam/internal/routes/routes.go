@@ -22,10 +22,19 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/avatar", handler.UploadAvatar)
 
 		api.POST("/posts", handler.CreatePost)
-		api.GET("posts", handler.GetPosts)
-		api.DELETE("posts/:id", handler.DeletePost)
+		api.GET("/posts", handler.GetPosts)
+		api.DELETE("/posts/:id", handler.DeletePost)
 		api.POST("/posts/:id/comments", handler.CreateComment)
 		api.GET("/posts/:id/comments", handler.GetComments)
-		api.POST("posts/:id/like", handler.ToggleLike)
+		api.POST("/posts/:id/like", handler.ToggleLike)
+	}
+	admin := r.Group("/api/admin")
+
+	admin.Use(
+		middleware.AuthMiddleWare(),
+		middleware.AdminOnly(),
+	)
+	{
+		admin.POST("/users/:id/role", handler.UpdateUserRole)
 	}
 }

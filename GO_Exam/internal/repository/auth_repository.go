@@ -35,3 +35,12 @@ func GetUserByID(id uint) (*models.User, error) {
 
 	return &user, nil
 }
+
+
+func UpdateUserRole(id uint, role string) error {
+
+	return config.DB.
+		Model(&models.User{}).
+		Where("id = ?", id).
+		Update("role", role).Error
+}
