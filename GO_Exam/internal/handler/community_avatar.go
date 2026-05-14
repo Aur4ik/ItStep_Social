@@ -5,15 +5,24 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"project/itStep/internal/config"
 
 	"github.com/gin-gonic/gin"
 )
-func UploadAvatar(c *gin.Context) {
+func CommunityAvatar(c *gin.Context) {
 
-	userID := c.GetInt("user_id")
+	idParam := c.Param("id")
+
+	communityID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid id",
+	})
+	return
+	}
 
 	file, err := c.FormFile("avatar")
 
@@ -25,7 +34,7 @@ func UploadAvatar(c *gin.Context) {
 	}
 
 	ext := filepath.Ext(file.Filename)
-	
+
 	allowed := map[string]bool{
 		".jpg":  true,
 		".jpeg": true,
@@ -53,7 +62,7 @@ func UploadAvatar(c *gin.Context) {
 
 	filename := fmt.Sprintf(
 		"%d_%d%s",
-		userID,
+		communityID,
 		time.Now().Unix(),
 		filepath.Ext(file.Filename),
 	)
@@ -72,8 +81,8 @@ func UploadAvatar(c *gin.Context) {
 	avatarURL := "/uploads/avatars/" + filename
 
 	err = config.DB.
-		Table("users").
-		Where("id = ?", userID).
+		Table("communities").
+		Where("id = ?", communityID).
 		Update("avatar", avatarURL).Error
 
 	if err != nil {
