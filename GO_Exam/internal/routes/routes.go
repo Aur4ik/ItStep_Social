@@ -29,6 +29,9 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/posts/:id/like", handler.ToggleLike)
 		api.GET("/communities/:id/posts", handler.GetCommunityPosts)
 		api.POST("/communities/:id/posts",handler.CreateCommunityPost)
+		api.GET("/communities/:id", handler.GetCommunityByID)
+		api.GET("/communities/:id/members", handler.GetCommunityMembers)
+		api.POST("/communities/:id/join", handler.JoinCommunity)
 		
 	}
 	admin := r.Group("/api/admin")

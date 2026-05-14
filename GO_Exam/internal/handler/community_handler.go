@@ -153,3 +153,48 @@ func CreateCommunityPost(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, post)
 }
+func GetCommunityByID(c *gin.Context) {
+
+	idParam := c.Param("id")
+
+	communityID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid community id",
+		})
+		return
+	}
+
+	community, err := service.GetCommunityByID(uint(communityID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "community not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, community)
+}
+
+func GetCommunityMembers(c *gin.Context) {
+
+	idParam := c.Param("id")
+
+	communityID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid community id",
+		})
+		return
+	}
+
+	users, err := service.GetCommunityMembers(uint(communityID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to get members",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}

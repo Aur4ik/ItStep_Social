@@ -35,3 +35,34 @@ func GetMembership(userID uint, communityID uint)(*models.Membership, error){
 	}
 	return &membership, nil
 }
+func GetCommunityByID(id uint) (*models.Community, error) {
+
+	var community models.Community
+
+	err := config.DB.
+		Preload("Owner").
+		First(&community, id).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &community, nil
+}
+func GetCommunityMembers(communityID uint) ([]models.User, error) {
+
+	var users []models.User
+
+	err := config.DB.
+		Table("users").
+		Select("users.*").
+		Joins("JOIN memberships ON memberships.user_id = users.id").
+		Where("memberships.community_id = ?", communityID).
+		Find(&users).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

@@ -7,6 +7,7 @@ import (
 
 	"project/itStep/internal/models"
 	"project/itStep/internal/repository"
+
 )
 
 func CreateCommunity(community *models.Community) error {
@@ -36,4 +37,12 @@ func JoinCommunity(userID uint, communityID uint)(error){
 		CommunityID: communityID,
 	}
 	return repository.CreateMembership(&membership)
+}
+
+func GetCommunityByID(id uint) (*models.Community, error) {
+	return repository.GetCommunityByID(id)
+}
+
+func GetCommunityMembers(communityID uint) ([]models.User, error) {
+	return repository.GetCommunityMembers(communityID)
 }
