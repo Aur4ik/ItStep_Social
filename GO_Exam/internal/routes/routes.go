@@ -27,6 +27,9 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/posts/:id/comments", handler.CreateComment)
 		api.GET("/posts/:id/comments", handler.GetComments)
 		api.POST("/posts/:id/like", handler.ToggleLike)
+		api.GET("/communities/:id/posts", handler.GetCommunityPosts)
+		api.POST("/communities/:id/posts",handler.CreateCommunityPost)
+		
 	}
 	admin := r.Group("/api/admin")
 
@@ -36,5 +39,13 @@ func SetupRoutes(r *gin.Engine) {
 	)
 	{
 		admin.POST("/users/:id/role", handler.UpdateUserRole)
+	}
+
+	teacher := api.Group("/communities")
+
+	teacher.Use(middleware.TeacherOrAdmin())
+	{
+		teacher.POST("/create", handler.CreateCommunity)
+		teacher.GET("/all", handler.GetCommunities)
 	}
 }

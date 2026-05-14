@@ -47,3 +47,20 @@ func GetPostWithAuthor(id uint) (*models.Post, error) {
 
 	return &post, nil
 }
+
+func GetCommunityPosts(communityID uint) ([]models.Post, error) {
+
+	var posts []models.Post
+
+	err := config.DB.
+		Preload("Author").
+		Where("community_id = ?", communityID).
+		Order("created_at desc").
+		Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

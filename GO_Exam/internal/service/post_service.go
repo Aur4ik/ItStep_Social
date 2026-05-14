@@ -31,3 +31,6 @@ func DeletePost(postID uint, userID uint) error{
 
 	return repository.DeletePost(postID)
 }
+func GetCommunityPosts(communityID uint) ([]models.Post, error) {
+	return repository.GetCommunityPosts(communityID)
+}

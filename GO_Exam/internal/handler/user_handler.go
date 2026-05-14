@@ -22,7 +22,7 @@ func UpdateUserRole(c *gin.Context){
 		return
 	}
 	var input struct{
-		Role string `json: "role"`
+		Role string `json:"role"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
