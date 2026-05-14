@@ -46,3 +46,35 @@ func GetCommunityByID(id uint) (*models.Community, error) {
 func GetCommunityMembers(communityID uint) ([]models.User, error) {
 	return repository.GetCommunityMembers(communityID)
 }
+
+func LeaveCommunity(userID uint, communityID uint) error {
+
+	_, err := repository.GetMembership(userID, communityID)
+	if err != nil {
+		return errors.New("not a member")
+	}
+
+	return repository.DeleteMembership(userID, communityID)
+}
+
+func DeleteCommunity(
+	communityID uint,
+	userID uint,
+	role string,
+) error {
+
+	community, err := repository.GetCommunityByID(communityID)
+	if err != nil {
+		return errors.New("community not found")
+	}
+
+	isOwner := community.OwnerID == userID
+
+	isAdmin := role == "admin"
+
+	if !isOwner && !isAdmin {
+		return errors.New("forbidden")
+	}
+
+	return repository.DeleteCommunity(communityID)
+}

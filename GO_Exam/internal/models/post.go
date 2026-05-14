@@ -11,7 +11,7 @@ type Post struct {
 	Author    User      `json:"author" gorm:"foreignKey:AuthorID"`
 
 	CommunityID *uint      `json:"community_id"`
-	Community   Community  `json:"community"`
+	Community Community `json:"community" gorm:"constraint:OnDelete:CASCADE;"`
 
 	CreatedAt time.Time `json:"created_at"`
 }

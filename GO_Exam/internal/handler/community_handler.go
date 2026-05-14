@@ -198,3 +198,75 @@ func GetCommunityMembers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, users)
 }
+
+func LeaveCommunity(c *gin.Context) {
+
+	userID := c.GetInt("user_id")
+
+	idParam := c.Param("id")
+
+	communityID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid community id",
+		})
+		return
+	}
+
+	err = service.LeaveCommunity(
+		uint(userID),
+		uint(communityID),
+	)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "left community",
+	})
+}
+
+func DeleteCommunity(c *gin.Context) {
+
+	userID := c.GetInt("user_id")
+
+	role := c.GetString("role")
+
+	idParam := c.Param("id")
+
+	communityID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid community id",
+		})
+		return
+	}
+
+	err = service.DeleteCommunity(
+		uint(communityID),
+		uint(userID),
+		role,
+	)
+
+	if err != nil {
+
+		status := http.StatusBadRequest
+
+		if err.Error() == "forbidden" {
+			status = http.StatusForbidden
+		}
+
+		c.JSON(status, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "community deleted",
+	})
+}

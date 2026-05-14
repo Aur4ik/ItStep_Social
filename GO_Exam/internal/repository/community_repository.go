@@ -66,3 +66,16 @@ func GetCommunityMembers(communityID uint) ([]models.User, error) {
 
 	return users, nil
 }
+
+func DeleteMembership(userID uint, communityID uint) error {
+
+	return config.DB.
+		Where("user_id = ? AND community_id = ?", userID, communityID).
+		Delete(&models.Membership{}).Error
+}
+
+func DeleteCommunity(id uint) error {
+
+	return config.DB.
+		Delete(&models.Community{}, id).Error
+}
