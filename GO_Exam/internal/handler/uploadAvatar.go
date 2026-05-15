@@ -38,12 +38,6 @@ func UploadAvatar(c *gin.Context) {
 		})
 		return
 }
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "file not found",
-		})
-		return
-	}
 	if file.Size > 5*1024*1024 {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"error": "file too large",

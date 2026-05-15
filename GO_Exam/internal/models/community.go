@@ -11,5 +11,7 @@ type Community struct {
 	OwnerID     uint      `json:"owner_id"`
 	Owner       User      `json:"owner" gorm:"foreignKey:OwnerID"`
 
+	MembersCount int64 `json:"members_count" gorm:"-"`
+	
 	CreatedAt   time.Time `json:"created_at"`
 }

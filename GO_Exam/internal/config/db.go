@@ -37,6 +37,7 @@ func ConnectDB(){
 		&models.Like{},
 		&models.Community{},
 		&models.Membership{},
+		&models.Schedule{},
 	)
 
 	if err != nil {

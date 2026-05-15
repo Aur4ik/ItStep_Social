@@ -38,6 +38,8 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/communities/:id/join", handler.JoinCommunity)
 		api.POST("/communities/:id/leave",handler.LeaveCommunity)
 		api.POST("/communities/:id/avatar", handler.CommunityAvatar)
+
+		api.GET("/communities/:id/schedule", handler.GetCommunitySchedule)
 		
 	}
 	admin := r.Group("/api/admin")
@@ -51,11 +53,14 @@ func SetupRoutes(r *gin.Engine) {
 		admin.DELETE("/communities/:id", handler.DeleteCommunity)
 	}
 
-	teacher := api.Group("/communities")
+	teacher := api.Group("/teacher")
 
 	teacher.Use(middleware.TeacherOrAdmin())
 	{
-		teacher.POST("/create", handler.CreateCommunity)
-		teacher.GET("/all", handler.GetCommunities)
+		teacher.POST("/communities/create", handler.CreateCommunity)
+		teacher.GET("/communities/all", handler.GetCommunities)
+		teacher.POST("/communities/:id/schedule", handler.CreateSchedule)
+		teacher.PUT("/schedule/:id/update", handler.UpdateSchedule)
+		teacher.DELETE("/schedule/:id/delete", handler.DeleteSchedule)
 	}
 }

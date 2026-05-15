@@ -8,7 +8,8 @@ import (
 func CreateCommunity(community *models.Community) error {
 	return config.DB.Create(community).Error
 }
-func GetCommunities()([]models.Community, error){
+func GetCommunities() ([]models.Community, error) {
+
 	var communities []models.Community
 
 	err := config.DB.
@@ -18,6 +19,19 @@ func GetCommunities()([]models.Community, error){
 	if err != nil {
 		return nil, err
 	}
+
+	for i := range communities {
+
+		var count int64
+
+		config.DB.
+			Model(&models.Membership{}).
+			Where("community_id = ?", communities[i].ID).
+			Count(&count)
+
+		communities[i].MembersCount = count
+	}
+
 	return communities, nil
 }
 func CreateMembership(membership *models.Membership)error{
