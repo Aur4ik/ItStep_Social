@@ -40,6 +40,16 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/communities/:id/avatar", handler.CommunityAvatar)
 
 		api.GET("/communities/:id/schedule", handler.GetCommunitySchedule)
+
+		//Group Chats
+		api.POST("/chats", handler.CreateChat)
+		api.GET("/chats", handler.GetChats)
+
+		api.PUT("/chats/:id", handler.UpdateChat)
+		api.DELETE("/chats/:id", handler.DeleteChat)
+
+		api.POST("/chats/:id/members",handler.AddChatMember)
+		api.GET("/chats/:id/members",handler.GetChatMembers)		
 		
 	}
 	admin := r.Group("/api/admin")

@@ -38,6 +38,9 @@ func ConnectDB(){
 		&models.Community{},
 		&models.Membership{},
 		&models.Schedule{},
+		&models.Chat{},
+		&models.Message{},
+		&models.ChatMember{},
 	)
 
 	if err != nil {
