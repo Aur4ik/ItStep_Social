@@ -9,31 +9,41 @@ import (
 	"project/itStep/internal/models"
 	"project/itStep/internal/service"
 	"project/itStep/internal/utils"
+	"project/itStep/internal/dto"
+	
 
 	"github.com/gin-gonic/gin"
 )
 func Register(c *gin.Context) {
+    var input dto.RegisterInput
 
-	var user models.User
+    if err := c.ShouldBindJSON(&input); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid data"})
+        return
+    }
 
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid data",
-		})
-		return
-	}
+    user := models.User{
+        Email:     input.Email,
+        Password:  input.Password,
+        FirstName: input.FirstName,
+        LastName:  input.LastName,
+        Group:     input.Group,
+    }
 
-	err := service.Register(&user)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+    if err := service.Register(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
-	user.Password = ""
-
-	c.JSON(http.StatusCreated, user)
+    c.JSON(http.StatusCreated, dto.UserResponse{
+        ID:        user.ID,
+        Email:     user.Email,
+        FirstName: user.FirstName,
+        LastName:  user.LastName,
+        Group:     user.Group,
+        Role:      user.Role,
+        Avatar:    user.Avatar,
+    })
 }
 
 func Login(c *gin.Context) {
@@ -72,18 +82,13 @@ func Login(c *gin.Context) {
 }
 
 func Me(c *gin.Context) {
+    userID := c.GetInt("user_id")
 
-	userID := c.GetInt("user_id")
+    user, err := service.GetUserByID(uint(userID))
+    if err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+        return
+    }
 
-	user, err := service.GetUserByID(uint(userID))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "user not found",
-		})
-		return
-	}
-
-	user.Password = ""
-
-	c.JSON(http.StatusOK, user)
+    c.JSON(http.StatusOK, dto.ToUserResponse(user))
 }
