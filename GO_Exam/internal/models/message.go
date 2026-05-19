@@ -8,7 +8,7 @@ type Message struct {
 	Content string `json:"content"`
 
 	ChatID uint `json:"chat_id"`
-	Chat   Chat `json:"chat"`
+	Chat Chat `gorm:"constraint:OnDelete:CASCADE;"`
 
 	SenderID uint `json:"sender_id"`
 	Sender   User `json:"sender"`

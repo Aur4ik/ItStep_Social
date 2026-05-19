@@ -5,6 +5,8 @@ import (
 
 	"project/itStep/internal/config"
 	"project/itStep/internal/routes"
+	"project/itStep/internal/handler"
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -25,5 +27,6 @@ func main() {
 
 	
 	r.Static("/uploads", "./uploads")
+	go handler.HandleMessages()
 	r.Run(":8080")
 }

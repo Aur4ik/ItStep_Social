@@ -47,3 +47,51 @@ func DeleteChat(chatID uint) error {
 
 	return repository.DeleteChat(chatID)
 }
+
+func CreateDMChat(
+	currentUser uint,
+	targetUser uint,
+) (*models.Chat, error) {
+
+	existingChat, err := repository.FindDMChat(
+		currentUser,
+		targetUser,
+	)
+
+	if err == nil {
+		return existingChat, nil
+	}
+
+	chat := models.Chat{
+		IsDM: true,
+	}
+
+	err = repository.CreateChat(&chat)
+	if err != nil {
+		return nil, err
+	}
+
+	err = repository.AddChatMember(
+		&models.ChatMember{
+			ChatID: chat.ID,
+			UserID: currentUser,
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = repository.AddChatMember(
+		&models.ChatMember{
+			ChatID: chat.ID,
+			UserID: targetUser,
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &chat, nil
+}

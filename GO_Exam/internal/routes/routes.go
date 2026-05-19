@@ -18,42 +18,50 @@ func SetupRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleWare())
 	{
-		//user
+		// user
 		api.GET("/me", handler.Me)
 		api.POST("/avatar", handler.UploadAvatar)
 
-		//Posts
+		// posts
 		api.POST("/posts", handler.CreatePost)
 		api.GET("/posts", handler.GetPosts)
 		api.DELETE("/posts/:id", handler.DeletePost)
+		api.GET("/posts/:id", handler.GetPostByID) // было /post/:id — исправлено на /posts/:id
+
 		api.POST("/posts/:id/comments", handler.CreateComment)
 		api.GET("/posts/:id/comments", handler.GetComments)
+
 		api.POST("/posts/:id/like", handler.ToggleLike)
 
-		//Comunity
+		// communities
 		api.GET("/communities/:id/posts", handler.GetCommunityPosts)
-		api.POST("/communities/:id/posts",handler.CreateCommunityPost)
+		api.POST("/communities/:id/posts", handler.CreateCommunityPost)
 		api.GET("/communities/:id", handler.GetCommunityByID)
 		api.GET("/communities/:id/members", handler.GetCommunityMembers)
 		api.POST("/communities/:id/join", handler.JoinCommunity)
-		api.POST("/communities/:id/leave",handler.LeaveCommunity)
+		api.POST("/communities/:id/leave", handler.LeaveCommunity)
 		api.POST("/communities/:id/avatar", handler.CommunityAvatar)
-
 		api.GET("/communities/:id/schedule", handler.GetCommunitySchedule)
 
-		//Group Chats
+		// chats
 		api.POST("/chats", handler.CreateChat)
 		api.GET("/chats", handler.GetChats)
-
 		api.PUT("/chats/:id", handler.UpdateChat)
 		api.DELETE("/chats/:id", handler.DeleteChat)
 
-		api.POST("/chats/:id/members",handler.AddChatMember)
-		api.GET("/chats/:id/members",handler.GetChatMembers)		
-		
-	}
-	admin := r.Group("/api/admin")
+		api.POST("/chats/:id/members", handler.AddChatMember)
+		api.GET("/chats/:id/members", handler.GetChatMembers)
 
+		api.POST("/chats/:id/messages", handler.CreateMessage)
+		api.GET("/chats/:id/messages", handler.GetChatMessages)
+
+		api.POST("/dm", handler.CreateDMChat)
+
+		// WebSocket — теперь за AuthMiddleWare
+		api.GET("/ws", handler.HandleConnections)
+	}
+
+	admin := r.Group("/api/admin")
 	admin.Use(
 		middleware.AuthMiddleWare(),
 		middleware.AdminOnly(),
@@ -64,7 +72,6 @@ func SetupRoutes(r *gin.Engine) {
 	}
 
 	teacher := api.Group("/teacher")
-
 	teacher.Use(middleware.TeacherOrAdmin())
 	{
 		teacher.POST("/communities/create", handler.CreateCommunity)

@@ -9,35 +9,33 @@ import (
 	"project/itStep/internal/repository"
 )
 
-func ToggleLike(userID uint, postID uint) (string, error) {
+
+func ToggleLike(userID uint, postID uint) (string, int64, error) {
 
 	like, err := repository.GetLike(userID, postID)
 
-
 	if err == nil {
-
-		err = repository.DeleteLike(like.ID)
-		if err != nil {
-			return "", err
+		if err = repository.DeleteLike(like.ID); err != nil {
+			return "", 0, err
 		}
-
-		return "like removed", nil
+	} else if errors.Is(err, gorm.ErrRecordNotFound) {
+		newLike := models.Like{UserID: userID, PostID: postID}
+		if err = repository.CreateLike(&newLike); err != nil {
+			return "", 0, err
+		}
+	} else {
+		return "", 0, err
 	}
 
-
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return "", err
-	}
-
-	newLike := models.Like{
-		UserID: userID,
-		PostID: postID,
-	}
-
-	err = repository.CreateLike(&newLike)
+	count, err := repository.CountLikes(postID)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
-	return "like added", nil
+	message := "like added"
+	if like != nil {
+		message = "like removed"
+	}
+
+	return message, count, nil
 }
