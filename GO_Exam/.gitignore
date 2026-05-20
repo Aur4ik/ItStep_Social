@@ -1,0 +1,41 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+
+# Go
+/vendor/
+/bin/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Uploads
+/uploads/
+
+# Docker
+postgres_data/
+
+# Temporary files
+tmp/
+temp/
+
+# Air
+.air/
+
+# Coverage
+coverage.out
