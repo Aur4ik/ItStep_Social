@@ -8,8 +8,10 @@ export default function FeedPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getPosts().then((res) => setPosts(res.data || []));
-  }, []);
+  getPosts()
+    .then((res) => setPosts(res.data || []))
+    .catch(() => setError("Не удалось загрузить посты"));
+}, []);
 
   const handleCreate = async (e) => {
     e.preventDefault();
