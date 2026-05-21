@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function PostCard({ post, onDelete }) {
   const { user } = useAuth();
-  const [likes, setLikes] = useState(post.like_count || 0);
+  const [likes, setLikes] = useState(post.likes_count || 0);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
@@ -37,7 +37,7 @@ export default function PostCard({ post, onDelete }) {
   };
 
   const avatarUrl = post.author?.avatar
-    ? `http://localhost:8080/${post.author.avatar}`
+    ? `http://localhost:8080${post.author.avatar}`
     : null;
 
   return (
