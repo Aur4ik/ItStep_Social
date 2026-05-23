@@ -11,7 +11,7 @@ export default function PostCard({ post, onDelete }) {
 
   const handleLike = async () => {
     const res = await toggleLike(post.id);
-    setLikes(res.data.like_count);
+    setLikes(res.data.like_count ?? likes);
   };
 
   const handleToggleComments = async () => {
