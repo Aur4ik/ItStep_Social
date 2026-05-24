@@ -1,6 +1,8 @@
 package main
 
+
 import (
+	"github.com/gin-contrib/cors"
 	"log"
 
 	"project/itStep/internal/config"
@@ -14,6 +16,7 @@ import (
 
 func main() {
 	
+	
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("env not loaded")
@@ -22,6 +25,14 @@ func main() {
 	config.ConnectDB()
 
 	r := gin.Default()
+
+	
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
 
 	routes.SetupRoutes(r)
 
