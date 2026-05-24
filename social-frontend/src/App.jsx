@@ -11,6 +11,8 @@ import CommunitiesPage from "./pages/CommunitiesPage";
 import CommunityDetailPage from "./pages/CommunityDetailPage";
 import SchedulePage from "./pages/SchedulePage";
 import AdminPage from "./pages/AdminPage";
+import ChatsPage from "./pages/ChatsPage";
+import ChatDetailPage from "./pages/ChatDetailPage";
 
 export default function App() {
   return (
@@ -27,6 +29,8 @@ export default function App() {
             <Route path="/communities/:id" element={<ProtectedRoute><CommunityDetailPage /></ProtectedRoute>} />
             <Route path="/communities/:id/schedule" element={<ProtectedRoute><SchedulePage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPage /></ProtectedRoute>} />
+            <Route path="/chats" element={<ProtectedRoute><ChatsPage /></ProtectedRoute>} />
+            <Route path="/chats/:id" element={<ProtectedRoute><ChatDetailPage /></ProtectedRoute>} />
           </Routes>
         </div>
       </BrowserRouter>

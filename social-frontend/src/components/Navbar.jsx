@@ -18,6 +18,7 @@ export default function Navbar() {
           <>
             <Link to="/" style={styles.link}>Лента</Link>
             <Link to="/communities" style={styles.link}>Сообщества</Link>
+            <Link to="/chats" style={styles.link}>Чаты</Link>
             <Link to="/profile" style={styles.link}>
               {user.first_name || user.email}
             </Link>
