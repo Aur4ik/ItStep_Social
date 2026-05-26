@@ -1,38 +1,33 @@
 package main
 
-
 import (
-	"github.com/gin-contrib/cors"
 	"log"
 	"os"
+	"strings"
 
-	"project/itStep/internal/config"
-	"project/itStep/internal/routes"
-	"project/itStep/internal/handler"
-
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	"project/itStep/internal/config"
+	"project/itStep/internal/handler"
+	"project/itStep/internal/routes"
 )
 
 func main() {
-	
-	
-err := godotenv.Load()
-if err != nil {
-    log.Println(".env not found")
-}
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env not found")
+	}
 
 	config.ConnectDB()
 
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
 
-	
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{
-			"http://localhost:5173",
-			"https://it-step-social-hfxlennyy-auriks-projects.vercel.app",
+		AllowOriginFunc: func(origin string) bool {
+			return strings.HasSuffix(origin, ".vercel.app") || origin == "http://localhost:5173"
 		},
 		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT"},
 		AllowHeaders:     []string{"Authorization", "Content-Type"},
@@ -41,13 +36,12 @@ if err != nil {
 
 	routes.SetupRoutes(r)
 
-	
 	r.Static("/uploads", "./uploads")
 	go handler.HandleMessages()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-
 	r.Run("0.0.0.0:" + port)
 }
